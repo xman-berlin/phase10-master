@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Phase 10 Master – Wertungsblatt</title>
+<meta name="description" content="Digitales Wertungsblatt für Phase 10 Master">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Phase 10">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<style>
+:root{
+  --line:#000; --bg:#fff; --fg:#000;
+  --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+  --sal:env(safe-area-inset-left,0px); --sar:env(safe-area-inset-right,0px);
+  --lblw:36px; --colw:84px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:16px;line-height:1.3;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  padding-left:var(--sal);padding-right:var(--sar)}
+button{font:inherit;color:inherit;touch-action:manipulation;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid #000;outline-offset:2px}
+.hidden{display:none!important}
+
+/* Kopfzeile wie auf dem Blatt */
+header.top{background:#000;color:#fff;padding:calc(var(--sat) + 10px) 14px 10px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-left:calc(-1 * var(--sal));margin-right:calc(-1 * var(--sar));
+  padding-left:calc(14px + var(--sal));padding-right:calc(14px + var(--sar))}
+.brand{font-weight:800;font-size:22px;letter-spacing:.2px;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.brand i{font-style:italic;font-weight:700;font-family:"Snell Roundhand","Brush Script MT",cursive,-apple-system,sans-serif;font-size:24px}
+.medal{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;
+  border:2px dotted #fff;font-size:15px;font-weight:800}
+.subtitle{font-weight:700;font-size:18px;white-space:nowrap}
+
+main{padding:12px 12px calc(160px + var(--sab))}
+main.setup-main{padding-bottom:calc(24px + var(--sab))}
+h2{font-size:20px;margin:6px 0 12px}
+
+/* Setup */
+.seg{display:flex;border:2px solid #000;border-radius:10px;overflow:hidden;margin-bottom:18px}
+.seg button{flex:1;min-height:52px;background:#fff;border:0;border-right:2px solid #000;font-size:20px;font-weight:700}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:#000;color:#fff}
+.field{display:block;margin-bottom:12px}
+.field span{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.field input,.inp{width:100%;min-height:50px;font-size:18px;padding:10px 12px;border:2px solid #000;border-radius:8px;background:#fff;color:#000;-webkit-appearance:none;appearance:none}
+.btn{display:block;width:100%;min-height:54px;border:2px solid #000;border-radius:10px;background:#fff;font-size:18px;font-weight:700;padding:10px 12px}
+.btn.primary{background:#000;color:#fff}
+.btn + .btn{margin-top:10px}
+.hint{font-size:13px;color:#333;margin:14px 2px 0}
+
+/* Gewinner */
+.banner{border:3px solid #000;background:#000;color:#fff;border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:20px;font-weight:800;text-align:center}
+.banner small{display:block;font-size:14px;font-weight:600;margin-top:2px}
+
+/* Wertungsblatt */
+.sheet-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:2px solid #000;border-radius:2px;overscroll-behavior-x:contain}
+table.sheet{border-collapse:separate;border-spacing:0;min-width:100%;table-layout:fixed}
+.sheet th,.sheet td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;text-align:center;vertical-align:middle}
+.sheet tr>*:last-child{border-right:0}
+.sheet .lbl{position:sticky;left:0;z-index:2;background:#fff;width:var(--lblw);min-width:var(--lblw);max-width:var(--lblw);font-size:13px;font-weight:700;border-right:2px solid #000}
+.sheet .pc{min-width:var(--colw);width:var(--colw)}
+.pname{display:block;width:100%;min-height:48px;border:0;background:#fff;padding:6px 4px 4px;text-align:left;font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pname .cnt{display:block;font-size:12px;font-weight:600;margin-top:2px}
+th.win .pname{background:#000;color:#fff}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr)}
+.ph{min-height:44px;border:0;border-right:1px solid #000;border-bottom:1px solid #000;background:#fff;font-size:17px;font-weight:700;padding:0}
+.ph:nth-child(3n){border-right:0}
+.ph[aria-pressed="true"]{background:#000;color:#fff;box-shadow:inset 0 0 0 3px #fff}
+.ph10wrap{grid-column:1 / -1;display:flex;align-items:center;justify-content:center;padding:6px 0}
+.ph10{width:48px;height:48px;border-radius:50%;border:2px dotted #000;background:#fff;font-size:18px;font-weight:800;padding:0}
+.ph10[aria-pressed="true"]{background:#000;color:#fff;border:2px dotted #fff;box-shadow:0 0 0 2px #000}
+.sheet tbody td{height:40px;font-size:18px;font-variant-numeric:tabular-nums}
+.sheet tbody tr.last td{font-weight:700}
+.sheet tfoot th,.sheet tfoot td{border-top:2px solid #000;border-bottom:0;height:46px;font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+.sheet tfoot td{text-align:left;padding-left:6px}
+.sheet tfoot td b{font-weight:800}
+.empty td{color:transparent}
+
+/* Aktionsleiste */
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid #000;
+  padding:10px calc(12px + var(--sar)) calc(10px + var(--sab)) calc(12px + var(--sal));z-index:10}
+.bar .row{display:flex;gap:8px;margin-top:8px}
+.bar .row .btn{margin:0;flex:1;font-size:14px;min-height:50px;padding:6px 4px;line-height:1.15}
+.bar .btn:disabled{opacity:.35}
+
+/* Modal (Bottom-Sheet) */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.modal{background:#fff;width:100%;max-width:560px;max-height:calc(100% - var(--sat) - 12px);overflow-y:auto;-webkit-overflow-scrolling:touch;
+  border-top:3px solid #000;border-radius:14px 14px 0 0;padding:14px calc(14px + var(--sar)) calc(16px + var(--sab)) calc(14px + var(--sal))}
+.modal h3{margin:0 0 10px;font-size:20px}
+.modal p{margin:0 0 12px}
+.pblock{border:2px solid #000;border-radius:10px;padding:10px;margin-bottom:10px}
+.pblock .head{display:flex;align-items:center;gap:10px}
+.pblock .head label{flex:1;font-weight:700;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pblock .head .inp{width:110px;flex:none;text-align:right;font-size:22px;font-weight:700}
+.chips{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px}
+.chip{min-height:44px;border:2px solid #000;border-radius:8px;background:#fff;font-size:17px;font-weight:700;padding:0}
+.chip[aria-pressed="true"]{background:#000;color:#fff}
+.chiplbl{font-size:12px;font-weight:600;margin-top:8px}
+.err{color:#000;font-weight:700;background:repeating-linear-gradient(45deg,#fff,#fff 6px,#eee 6px,#eee 12px);border:2px solid #000;border-radius:8px;padding:8px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><i>Phase</i><span class="medal" aria-hidden="true">10</span><span>Master</span></div>
+  <div class="subtitle">Wertungsblatt</div>
+</header>
+
+<main id="app" aria-live="polite"></main>
+
+<nav class="bar hidden" id="bar" aria-label="Aktionen">
+  <button class="btn primary" id="btnRound" type="button">＋ Runde eintragen</button>
+  <div class="row">
+    <button class="btn" id="btnUndo" type="button" aria-label="Rückgängig: letzte Aktion zurücknehmen">↶ Rückgängig</button>
+    <button class="btn" id="btnCorrect" type="button">Letzte Eingabe korrigieren</button>
+    <button class="btn" id="btnNew" type="button">Neues Spiel</button>
+  </div>
+</nav>
+
+<div id="modalRoot"></div>
+
+<script>
+(function () {
+  'use strict';
+  var KEY = 'phase10master.state.v1';
+  var HKEY = 'phase10master.history.v1';
+  var MAX_HIST = 100;
+  var MAX_PLAYERS = 5;
+  var app = document.getElementById('app');
+  var bar = document.getElementById('bar');
+  var modalRoot = document.getElementById('modalRoot');
+
+  // ---------- Zustand ----------
+  function emptyPhases() { return [false,false,false,false,false,false,false,false,false,false]; }
+  function defaultState() {
+    return { v: 1, screen: 'setup', setupCount: 3, setupNames: ['Spieler 1','Spieler 2','Spieler 3','Spieler 4','Spieler 5'],
+             players: [], phases: [], rounds: [] };
+  }
+  var state = defaultState();
+  var history = []; // [{label, snap}]
+
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function save() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(state));
+      localStorage.setItem(HKEY, JSON.stringify(history));
+    } catch (e) { /* z.B. privater Modus – App funktioniert trotzdem */ }
+  }
+  function valid(s) {
+    if (!s || typeof s !== 'object' || !Array.isArray(s.players) || !Array.isArray(s.phases) || !Array.isArray(s.rounds)) return false;
+    if (s.phases.length !== s.players.length) return false;
+    for (var i = 0; i < s.rounds.length; i++) if (!Array.isArray(s.rounds[i]) || s.rounds[i].length !== s.players.length) return false;
+    return true;
+  }
+  function load() {
+    try {
+      var s = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (valid(s)) state = Object.assign(defaultState(), s);
+      var h = JSON.parse(localStorage.getItem(HKEY) || '[]');
+      if (Array.isArray(h)) history = h.filter(function (x) { return x && valid(x.snap); });
+    } catch (e) { state = defaultState(); history = []; }
+    if (state.screen === 'game' && !state.players.length) state.screen = 'setup';
+  }
+  // Jede Änderung: vorherigen Zustand auf den Undo-Stapel legen
+  function commit(label, mutate) {
+    history.push({ label: label, snap: clone(state) });
+    if (history.length > MAX_HIST) history.shift();
+    mutate();
+    save();
+    render();
+  }
+  function undo() {
+    var h = history.pop();
+    if (!h) return;
+    state = Object.assign(defaultState(), h.snap);
+    save();
+    render();
+    toast('Rückgängig: ' + h.label);
+  }
+
+  // ---------- Hilfen ----------
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function totals() {
+    return state.players.map(function (_, i) { return state.rounds.reduce(function (a, r) { return a + (r[i] || 0); }, 0); });
+  }
+  function doneCount(i) { return state.phases[i].filter(Boolean).length; }
+  function winnerInfo() {
+    var t = totals();
+    var done = [];
+    state.players.forEach(function (_, i) { if (doneCount(i) === 10) done.push(i); });
+    if (!done.length) return null;
+    var min = Math.min.apply(null, done.map(function (i) { return t[i]; }));
+    var w = done.filter(function (i) { return t[i] === min; });
+    return { winners: w, points: min, tie: w.length > 1 };
+  }
+  function parsePts(v) {
+    v = String(v == null ? '' : v).replace(/\D/g, '');
+    if (v === '') return 0;
+    var n = parseInt(v, 10);
+    return isFinite(n) ? Math.min(n, 99999) : 0;
+  }
+  var toastTimer;
+  function toast(msg) {
+    var el = document.getElementById('toast');
+    if (!el) {
+      el = document.createElement('div'); el.id = 'toast'; el.setAttribute('role', 'status');
+      el.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));background:#000;color:#fff;padding:10px 14px;border-radius:10px;font-weight:600;z-index:60;max-width:90%;text-align:center;font-size:15px;pointer-events:none';
+      document.body.appendChild(el);
+    }
+    el.textContent = msg; el.style.display = 'block';
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { el.style.display = 'none'; }, 1800);
+  }
+
+  // ---------- Render ----------
+  function render() {
+    if (state.screen === 'setup') renderSetup(); else renderGame();
+  }
+
+  function renderSetup() {
+    bar.classList.add('hidden');
+    app.className = 'setup-main';
+    var n = state.setupCount;
+    var h = '<h2>Neues Spiel</h2>';
+    h += '<div class="field"><span id="cntLbl">Anzahl Spieler</span></div>';
+    h += '<div class="seg" role="group" aria-labelledby="cntLbl">';
+    for (var k = 1; k <= MAX_PLAYERS; k++) {
+      h += '<button type="button" data-count="' + k + '" aria-pressed="' + (k === n) + '" aria-label="' + k + ' Spieler">' + k + '</button>';
+    }
+    h += '</div>';
+    for (var i = 0; i < n; i++) {
+      h += '<label class="field"><span>Name Spieler ' + (i + 1) + '</span>' +
+        '<input type="text" maxlength="20" autocomplete="off" autocapitalize="words" enterkeyhint="next" data-name="' + i + '" value="' + esc(state.setupNames[i] || ('Spieler ' + (i + 1))) + '"></label>';
+    }
+    h += '<button class="btn primary" type="button" id="btnStart">Spiel starten</button>';
+    if (history.length && state.players.length) {
+      h += '<button class="btn" type="button" id="btnBackGame">↶ Zurück zum letzten Spiel</button>';
+    }
+    h += '<p class="hint">Phase 10 Master: Die Phasen dürfen in beliebiger Reihenfolge erfüllt werden. Wer zuerst alle 10 Phasen hat, gewinnt – bei mehreren gewinnt, wer die wenigsten Minuspunkte hat.</p>';
+    app.innerHTML = h;
+  }
+
+  function renderGame() {
+    bar.classList.remove('hidden');
+    app.className = '';
+    var n = state.players.length;
+    var t = totals();
+    var w = winnerInfo();
+    var h = '';
+    if (w) {
+      var names = w.winners.map(function (i) { return esc(state.players[i]); });
+      h += '<div class="banner" role="alert">' + (w.tie ? 'Gleichstand: ' + names.join(' &amp; ') : 'Gewinner: ' + names[0]) +
+        '<small>alle 10 Phasen · ' + w.points + ' Punkte</small></div>';
+    }
+    var colw = Math.max(84, Math.floor((Math.min(window.innerWidth, 560) - 24 - 4 - 36) / n));
+    h += '<div class="sheet-wrap" style="--colw:' + colw + 'px"><table class="sheet" aria-label="Wertungsblatt">';
+    // Namen
+    h += '<thead><tr><th class="lbl" scope="col"><span class="hidden">Runde</span></th>';
+    for (var i = 0; i < n; i++) {
+      var isWin = w && w.winners.indexOf(i) >= 0;
+      h += '<th class="pc' + (isWin ? ' win' : '') + '" scope="col"><button type="button" class="pname" data-rename="' + i + '" aria-label="' + esc(state.players[i]) + ', ' + doneCount(i) + ' von 10 Phasen. Namen ändern">' +
+        esc(state.players[i]) + '<span class="cnt">' + doneCount(i) + '/10</span></button></th>';
+    }
+    h += '</tr>';
+    // Phasen
+    h += '<tr><th class="lbl" scope="row" aria-label="Phasen">Ph.</th>';
+    for (i = 0; i < n; i++) {
+      h += '<td class="pc"><div class="pgrid">';
+      for (var p = 0; p < 9; p++) h += phaseBtn(i, p, 'ph');
+      h += '<div class="ph10wrap">' + phaseBtn(i, 9, 'ph10') + '</div></div></td>';
+    }
+    h += '</tr></thead><tbody>';
+    // Runden
+    var rows = state.rounds.length;
+    for (var r = 0; r < rows; r++) {
+      h += '<tr' + (r === rows - 1 ? ' class="last"' : '') + '><th class="lbl" scope="row">' + (r + 1) + '</th>';
+      for (i = 0; i < n; i++) h += '<td>' + state.rounds[r][i] + '</td>';
+      h += '</tr>';
+    }
+    for (r = rows; r < Math.max(5, rows + 1); r++) { // leere Zeilen wie auf dem Papier
+      h += '<tr class="empty" aria-hidden="true"><th class="lbl"></th>';
+      for (i = 0; i < n; i++) h += '<td></td>';
+      h += '</tr>';
+    }
+    h += '</tbody><tfoot><tr><th class="lbl" scope="row" aria-label="Summe">=</th>';
+    for (i = 0; i < n; i++) h += '<td data-total="' + i + '">' + t[i] + '</td>';
+    h += '</tr></tfoot></table></div>';
+    h += '<p class="hint">Phasen antippen zum Abhaken (beliebige Reihenfolge). Namen antippen zum Umbenennen.</p>';
+    var oldWrap = app.querySelector('.sheet-wrap');
+    var keepX = oldWrap ? oldWrap.scrollLeft : 0;
+    app.innerHTML = h;
+    if (keepX) app.querySelector('.sheet-wrap').scrollLeft = keepX; // horizontale Position beim Neuzeichnen behalten
+    var u = document.getElementById('btnUndo');
+    u.disabled = !history.length;
+    u.setAttribute('aria-label', history.length ? 'Rückgängig: ' + history[history.length - 1].label : 'Rückgängig (nichts zum Zurücknehmen)');
+  }
+  function phaseBtn(i, p, cls) {
+    var on = !!state.phases[i][p];
+    return '<button type="button" class="' + cls + '" data-player="' + i + '" data-phase="' + p + '" aria-pressed="' + on + '" aria-label="' +
+      esc(state.players[i]) + ': Phase ' + (p + 1) + '">' + (p + 1) + '</button>';
+  }
+
+  // ---------- Modals ----------
+  var lastFocus = null;
+  function openModal(html, onReady) {
+    lastFocus = document.activeElement;
+    modalRoot.innerHTML = '<div class="overlay" id="overlay"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">' + html + '</div></div>';
+    document.body.style.overflow = 'hidden';
+    var ov = document.getElementById('overlay');
+    ov.addEventListener('click', function (e) { if (e.target === ov) closeModal(); });
+    if (onReady) onReady(ov.firstChild);
+  }
+  function closeModal() {
+    modalRoot.innerHTML = '';
+    document.body.style.overflow = '';
+    if (lastFocus && lastFocus.focus) try { lastFocus.focus(); } catch (e) {}
+  }
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modalRoot.firstChild) closeModal(); });
+
+  // Runde eintragen / letzte Runde bearbeiten
+  function openRoundModal(editIndex) {
+    var edit = typeof editIndex === 'number';
+    var n = state.players.length;
+    var tmpPh = clone(state.phases);
+    var h = '<h3 id="mTitle">' + (edit ? 'Runde ' + (editIndex + 1) + ' korrigieren' : 'Runde ' + (state.rounds.length + 1) + ' eintragen') + '</h3>';
+    h += '<div id="mErr" class="err hidden" role="alert"></div>';
+    for (var i = 0; i < n; i++) {
+      var val = edit ? state.rounds[editIndex][i] : 0;
+      h += '<div class="pblock"><div class="head"><label for="pts' + i + '">' + esc(state.players[i]) + '</label>' +
+        '<input class="inp" id="pts' + i + '" data-pts="' + i + '" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" value="' + val + '" aria-label="Minuspunkte ' + esc(state.players[i]) + '"></div>';
+      h += '<div class="chiplbl">Erfüllte Phasen</div><div class="chips" role="group" aria-label="Phasen ' + esc(state.players[i]) + '">';
+      for (var p = 0; p < 10; p++) {
+        h += '<button type="button" class="chip" data-mp="' + i + '" data-mph="' + p + '" aria-pressed="' + !!tmpPh[i][p] + '" aria-label="' + esc(state.players[i]) + ': Phase ' + (p + 1) + '">' + (p + 1) + '</button>';
+      }
+      h += '</div></div>';
+    }
+    h += '<button class="btn primary" type="button" id="mSave">Speichern</button>';
+    if (edit) h += '<button class="btn" type="button" id="mDelete">Runde ' + (editIndex + 1) + ' löschen</button>';
+    h += '<button class="btn" type="button" id="mCancel">Abbrechen</button>';
+    openModal(h, function (m) {
+      m.addEventListener('click', function (e) {
+        var c = e.target.closest('[data-mph]');
+        if (c) {
+          var pi = +c.getAttribute('data-mp'), ph = +c.getAttribute('data-mph');
+          tmpPh[pi][ph] = !tmpPh[pi][ph];
+          c.setAttribute('aria-pressed', String(tmpPh[pi][ph]));
+          return;
+        }
+        if (e.target.id === 'mCancel') closeModal();
+        if (e.target.id === 'mDelete') {
+          closeModal();
+          commit('Runde ' + (editIndex + 1) + ' gelöscht', function () { state.rounds.splice(editIndex, 1); });
+          toast('Runde gelöscht');
+        }
+        if (e.target.id === 'mSave') {
+          var pts = [], bad = false;
+          m.querySelectorAll('[data-pts]').forEach(function (inp) {
+            var raw = inp.value.trim();
+            if (raw !== '' && !/^\d+$/.test(raw)) bad = true;
+            pts[+inp.getAttribute('data-pts')] = parsePts(raw);
+          });
+          if (bad) {
+            var er = document.getElementById('mErr');
+            er.textContent = 'Bitte nur ganze Zahlen ab 0 eingeben.'; er.classList.remove('hidden'); er.scrollIntoView({ block: 'nearest' });
+            return;
+          }
+          closeModal();
+          commit(edit ? 'Runde ' + (editIndex + 1) + ' korrigiert' : 'Runde ' + (state.rounds.length + 1) + ' eingetragen', function () {
+            if (edit) state.rounds[editIndex] = pts; else state.rounds.push(pts);
+            state.phases = tmpPh;
+          });
+        }
+      });
+      m.querySelectorAll('[data-pts]').forEach(function (inp) {
+        inp.addEventListener('focus', function () { setTimeout(function () { try { inp.setSelectionRange(0, inp.value.length); } catch (e) {} }, 0); });
+        inp.addEventListener('input', function () { var c = inp.value.replace(/\D/g, ''); if (c !== inp.value) inp.value = c; });
+        inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); document.getElementById('mSave').click(); } });
+      });
+    });
+  }
+
+  function openCorrectModal() {
+    var last = history[history.length - 1];
+    var h = '<h3 id="mTitle">Letzte Eingabe korrigieren</h3>';
+    if (!last && !state.rounds.length) h += '<p>Es gibt noch nichts zu korrigieren.</p>';
+    if (last) h += '<button class="btn primary" type="button" id="cUndo">↶ Rückgängig: ' + esc(last.label) + '</button>';
+    if (state.rounds.length) {
+      h += '<button class="btn" type="button" id="cEdit">Runde ' + state.rounds.length + ' bearbeiten (Punkte &amp; Phasen)</button>';
+      h += '<button class="btn" type="button" id="cDel">Runde ' + state.rounds.length + ' löschen</button>';
+    }
+    h += '<button class="btn" type="button" id="cCancel">Abbrechen</button>';
+    openModal(h, function (m) {
+      m.addEventListener('click', function (e) {
+        var id = e.target.id;
+        if (id === 'cCancel') closeModal();
+        if (id === 'cUndo') { closeModal(); undo(); }
+        if (id === 'cEdit') { closeModal(); openRoundModal(state.rounds.length - 1); }
+        if (id === 'cDel') {
+          var k = state.rounds.length;
+          closeModal();
+          commit('Runde ' + k + ' gelöscht', function () { state.rounds.pop(); });
+          toast('Runde ' + k + ' gelöscht');
+        }
+      });
+    });
+  }
+
+  function openNewGameModal() {
+    var h = '<h3 id="mTitle">Neues Spiel starten?</h3><p>Punkte und Phasen des aktuellen Spiels werden zurückgesetzt. (Mit „Rückgängig“ lässt sich das zurücknehmen.)</p>';
+    h += '<button class="btn primary" type="button" id="nSame">Gleiche Spieler – neu starten</button>';
+    h += '<button class="btn" type="button" id="nSetup">Zur Spielerauswahl</button>';
+    h += '<button class="btn" type="button" id="nCancel">Abbrechen</button>';
+    openModal(h, function (m) {
+      m.addEventListener('click', function (e) {
+        var id = e.target.id;
+        if (id === 'nCancel') closeModal();
+        if (id === 'nSame') {
+          closeModal();
+          commit('Neues Spiel', function () { state.rounds = []; state.phases = state.players.map(emptyPhases); });
+          toast('Neues Spiel gestartet');
+        }
+        if (id === 'nSetup') {
+          closeModal();
+          commit('Neues Spiel (Spielerauswahl)', function () {
+            state.setupCount = state.players.length || 3;
+            state.players.forEach(function (p, i) { state.setupNames[i] = p; });
+            state.screen = 'setup';
+          });
+        }
+      });
+    });
+  }
+
+  // ---------- Events ----------
+  app.addEventListener('click', function (e) {
+    var t = e.target.closest('button');
+    if (!t) return;
+    if (t.hasAttribute('data-count')) {
+      syncSetupNames();
+      state.setupCount = +t.getAttribute('data-count');
+      save(); render();
+      return;
+    }
+    if (t.id === 'btnStart') {
+      syncSetupNames();
+      var n = state.setupCount;
+      commit('Spiel gestartet', function () {
+        state.players = [];
+        for (var i = 0; i < n; i++) {
+          var nm = (state.setupNames[i] || '').trim() || ('Spieler ' + (i + 1));
+          state.players.push(nm.slice(0, 20));
+        }
+        state.phases = state.players.map(emptyPhases);
+        state.rounds = [];
+        state.screen = 'game';
+      });
+      window.scrollTo(0, 0);
+      return;
+    }
+    if (t.id === 'btnBackGame') { undo(); return; }
+    if (t.hasAttribute('data-phase')) {
+      var pi = +t.getAttribute('data-player'), ph = +t.getAttribute('data-phase');
+      var on = !state.phases[pi][ph];
+      commit('Phase ' + (ph + 1) + (on ? ' abgehakt' : ' entfernt') + ' bei ' + state.players[pi], function () { state.phases[pi][ph] = on; });
+      return;
+    }
+    if (t.hasAttribute('data-rename')) {
+      var ri = +t.getAttribute('data-rename');
+      var nn = window.prompt('Neuer Name für ' + state.players[ri] + ':', state.players[ri]);
+      if (nn != null && nn.trim() && nn.trim() !== state.players[ri]) {
+        nn = nn.trim().slice(0, 20);
+        commit('Umbenannt: ' + state.players[ri] + ' → ' + nn, function () { state.players[ri] = nn; });
+      }
+    }
+  });
+  app.addEventListener('input', function (e) {
+    if (e.target.hasAttribute('data-name')) { syncSetupNames(); save(); }
+  });
+  app.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.hasAttribute('data-name')) {
+      e.preventDefault();
+      var next = app.querySelector('[data-name="' + (+e.target.getAttribute('data-name') + 1) + '"]');
+      if (next) next.focus(); else e.target.blur();
+    }
+  });
+  function syncSetupNames() {
+    app.querySelectorAll('[data-name]').forEach(function (inp) { state.setupNames[+inp.getAttribute('data-name')] = inp.value; });
+  }
+  document.getElementById('btnRound').addEventListener('click', function () { openRoundModal(); });
+  document.getElementById('btnUndo').addEventListener('click', undo);
+  document.getElementById('btnCorrect').addEventListener('click', openCorrectModal);
+  document.getElementById('btnNew').addEventListener('click', openNewGameModal);
+  // Nur bei Breitenänderung (Drehen) neu zeichnen – iOS feuert resize auch beim Ein-/Ausblenden der Adressleiste
+  var rt, lastW = window.innerWidth;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () {
+      if (window.innerWidth === lastW) return;
+      lastW = window.innerWidth;
+      if (state.screen === 'game' && !modalRoot.firstChild) render();
+    }, 150);
+  });
+
+  // Test-/Debug-Hook (nur lesend)
+  window.__p10 = { get state() { return clone(state); }, get history() { return history.length; }, winnerInfo: winnerInfo, totals: totals };
+
+  load();
+  render();
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(function (err) { console.warn('SW-Registrierung fehlgeschlagen', err); });
+    });
+  }
+})();
+</script>
+</body>
+</html>
