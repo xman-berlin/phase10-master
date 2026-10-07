@@ -2,177 +2,352 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Phase 10 Master – Wertungsblatt</title>
 <meta name="description" content="Digitales Wertungsblatt für Phase 10 Master">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#eef1f5" id="themeColor">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default" id="statusBar">
 <meta name="apple-mobile-web-app-title" content="Phase 10">
 <meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<script>
+(function(){try{var t=localStorage.getItem('phase10master.theme');document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){}})();
+</script>
 <style>
-:root{
-  --line:#000; --bg:#fff; --fg:#000;
+:root,[data-theme="light"]{
+  color-scheme:light;
+  --bg:#eef1f5; --bg-2:#e4e9ef; --surface:#ffffff; --surface-2:#f6f8fa;
+  --ink:#1c2128; --muted:#667085; --line:#e4e8ee;
+  --accent:#0d9488; --accent-2:#0f766e; --accent-soft:#ccfbf1; --on-accent:#fff;
+  --ok:#059669; --rose:#dc2626; --rose-soft:#fee2e2;
+  --win-bg:#ecfdf5; --win-ink:#047857;
+  --shadow:0 10px 32px rgba(16,24,40,.08);
+  --p0:#f43f5e; --p1:#f59e0b; --p2:#10b981; --p3:#3b82f6; --p4:#8b5cf6; --p5:#f97316;
+  --kbd:#e8ecf1; --kbd-key:#fff; --kbd-ink:#1c2128; --overlay:rgba(15,23,42,.4);
   --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
   --sal:env(safe-area-inset-left,0px); --sar:env(safe-area-inset-right,0px);
-  --lblw:36px; --colw:84px;
+  --lblw:42px; --colw:96px; --radius:16px;
+}
+[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#101318; --bg-2:#0c0e12; --surface:#1a1f27; --surface-2:#222830;
+  --ink:#eef1f5; --muted:#9aa3ad; --line:#2c333d;
+  --accent:#2dd4bf; --accent-2:#14b8a6; --accent-soft:#134e4a; --on-accent:#042f2e;
+  --ok:#34d399; --rose:#fb7185; --rose-soft:#3f1d24;
+  --win-bg:#134e4a; --win-ink:#5eead4;
+  --shadow:0 10px 32px rgba(0,0,0,.45);
+  --kbd:#12151a; --kbd-key:#2a3038; --kbd-ink:#eef1f5; --overlay:rgba(0,0,0,.55);
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--fg);
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;height:100%;height:100svh;max-height:100svh;overflow:hidden}
+body{margin:0;background:var(--bg);color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  font-size:16px;line-height:1.3;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  font-size:16px;line-height:1.35;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  height:100%;max-height:100svh;overflow:hidden;display:flex;flex-direction:column;
   padding-left:var(--sal);padding-right:var(--sar)}
 button{font:inherit;color:inherit;touch-action:manipulation;cursor:pointer}
-button:focus-visible,input:focus-visible{outline:3px solid #000;outline-offset:2px}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .hidden{display:none!important}
 
-/* Kopfzeile wie auf dem Blatt */
-header.top{background:#000;color:#fff;padding:calc(var(--sat) + 10px) 14px 10px;
+header.top{flex:none;background:var(--surface);color:var(--ink);
+  padding:calc(var(--sat) + 10px) 16px 10px;
   display:flex;align-items:center;justify-content:space-between;gap:10px;
   margin-left:calc(-1 * var(--sal));margin-right:calc(-1 * var(--sar));
-  padding-left:calc(14px + var(--sal));padding-right:calc(14px + var(--sar))}
-.brand{font-weight:800;font-size:22px;letter-spacing:.2px;white-space:nowrap;display:flex;align-items:center;gap:6px}
-.brand i{font-style:italic;font-weight:700;font-family:"Snell Roundhand","Brush Script MT",cursive,-apple-system,sans-serif;font-size:24px}
-.medal{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;
-  border:2px dotted #fff;font-size:15px;font-weight:800}
-.subtitle{font-weight:700;font-size:18px;white-space:nowrap}
+  padding-left:calc(16px + var(--sal));padding-right:calc(16px + var(--sar));
+  border-bottom:1px solid var(--line)}
+.brand{font-weight:800;font-size:20px;letter-spacing:.15px;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.brand i{font-style:normal;font-weight:800;font-size:20px;color:var(--ink)}
+.medal{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;
+  border:0;font-size:12px;font-weight:800;color:var(--on-accent);background:var(--accent)}
+.theme-btn{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;
+  border:1px solid var(--line);border-radius:999px;background:var(--surface-2);color:var(--ink);
+  font-size:13px;font-weight:700}
+.theme-btn .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
 
-main{padding:12px 12px calc(160px + var(--sab))}
-main.setup-main{padding-bottom:calc(24px + var(--sab))}
-h2{font-size:20px;margin:6px 0 12px}
+main{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;flex-direction:column;
+  padding:10px 12px 8px;width:100%;margin:0 auto}
+main.setup-main{display:block;overflow:auto;-webkit-overflow-scrolling:touch;
+  padding:16px 14px calc(28px + var(--sab));max-width:560px}
+h2{font-size:26px;font-weight:800;margin:4px 0 14px;color:var(--ink);letter-spacing:-.02em}
 
-/* Setup */
-.seg{display:flex;border:2px solid #000;border-radius:10px;overflow:hidden;margin-bottom:18px}
-.seg button{flex:1;min-height:52px;background:#fff;border:0;border-right:2px solid #000;font-size:20px;font-weight:700}
+.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:16px;background:var(--surface)}
+.seg button{flex:1;min-height:52px;background:transparent;border:0;border-right:1px solid var(--line);font-size:20px;font-weight:700;color:var(--ink)}
 .seg button:last-child{border-right:0}
-.seg button[aria-pressed="true"]{background:#000;color:#fff}
-.field{display:block;margin-bottom:12px}
-.field span{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
-.field input,.inp{width:100%;min-height:50px;font-size:18px;padding:10px 12px;border:2px solid #000;border-radius:8px;background:#fff;color:#000;-webkit-appearance:none;appearance:none}
-.btn{display:block;width:100%;min-height:54px;border:2px solid #000;border-radius:10px;background:#fff;font-size:18px;font-weight:700;padding:10px 12px}
-.btn.primary{background:#000;color:#fff}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+
+.name-btn{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:58px;
+  margin-bottom:10px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);text-align:left}
+.name-btn .k{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.name-btn .v{font-size:18px;font-weight:800}
+.name-btn .edit{font-size:13px;color:var(--accent-2);font-weight:700}
+
+.btn{display:block;width:100%;min-height:54px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);
+  font-size:17px;font-weight:700;padding:10px 12px}
+.btn.primary{background:var(--accent);color:var(--on-accent);border-color:transparent}
+.btn.danger{background:var(--rose-soft);color:var(--rose);border-color:transparent}
 .btn + .btn{margin-top:10px}
-.hint{font-size:13px;color:#333;margin:14px 2px 0}
+.btn:disabled{opacity:.38}
+.hint{font-size:14px;color:var(--muted);margin:16px 2px 0;line-height:1.45}
+.install{margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--accent-soft);border:1px solid transparent;color:var(--ink);font-size:14px}
 
-/* Gewinner */
-.banner{border:3px solid #000;background:#000;color:#fff;border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:20px;font-weight:800;text-align:center}
-.banner small{display:block;font-size:14px;font-weight:600;margin-top:2px}
+.win-overlay{position:fixed;inset:0;z-index:88;display:flex;align-items:center;justify-content:center;
+  padding:24px;background:rgba(15,23,42,.42);-webkit-tap-highlight-color:transparent}
+.win-card{width:min(420px,100%);border:0;border-radius:24px;background:var(--surface);color:var(--ink);
+  padding:28px 24px 22px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.28)}
+.win-kicker{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-2)}
+.win-name{font-size:32px;font-weight:800;letter-spacing:-.03em;margin:8px 0 6px;line-height:1.15}
+.win-card small{display:block;color:var(--muted);font-size:14px;font-weight:600}
+.win-hint{display:block;margin-top:18px;font-size:13px;font-weight:700;color:var(--muted)}
 
-/* Wertungsblatt */
-.sheet-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:2px solid #000;border-radius:2px;overscroll-behavior-x:contain}
-table.sheet{border-collapse:separate;border-spacing:0;min-width:100%;table-layout:fixed}
+.sheet-card{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;
+  background:var(--surface);border-radius:18px;padding:6px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.sheet-wrap{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;border-radius:12px}
+table.sheet{border-collapse:separate;border-spacing:0;min-width:100%;width:100%;height:100%;table-layout:fixed;background:var(--surface)}
 .sheet th,.sheet td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;text-align:center;vertical-align:middle}
 .sheet tr>*:last-child{border-right:0}
-.sheet .lbl{position:sticky;left:0;z-index:2;background:#fff;width:var(--lblw);min-width:var(--lblw);max-width:var(--lblw);font-size:13px;font-weight:700;border-right:2px solid #000}
-.sheet .pc{min-width:var(--colw);width:var(--colw)}
-.pname{display:block;width:100%;min-height:48px;border:0;background:#fff;padding:6px 4px 4px;text-align:left;font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pname .cnt{display:block;font-size:12px;font-weight:600;margin-top:2px}
-th.win .pname{background:#000;color:#fff}
-.pgrid{display:grid;grid-template-columns:repeat(3,1fr)}
-.ph{min-height:44px;border:0;border-right:1px solid #000;border-bottom:1px solid #000;background:#fff;font-size:17px;font-weight:700;padding:0}
-.ph:nth-child(3n){border-right:0}
-.ph[aria-pressed="true"]{background:#000;color:#fff;box-shadow:inset 0 0 0 3px #fff}
-.ph10wrap{grid-column:1 / -1;display:flex;align-items:center;justify-content:center;padding:6px 0}
-.ph10{width:48px;height:48px;border-radius:50%;border:2px dotted #000;background:#fff;font-size:18px;font-weight:800;padding:0}
-.ph10[aria-pressed="true"]{background:#000;color:#fff;border:2px dotted #fff;box-shadow:0 0 0 2px #000}
-.sheet tbody td{height:40px;font-size:18px;font-variant-numeric:tabular-nums}
-.sheet tbody tr.last td{font-weight:700}
-.sheet tfoot th,.sheet tfoot td{border-top:2px solid #000;border-bottom:0;height:46px;font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
-.sheet tfoot td{text-align:left;padding-left:6px}
-.sheet tfoot td b{font-weight:800}
+.sheet thead{position:sticky;top:0;z-index:4}
+.sheet thead th,.sheet thead td{background:var(--surface)}
+.sheet thead th.win{background:var(--win-bg)}
+.sheet .lbl{position:sticky;left:0;z-index:2;background:var(--surface-2);width:var(--lblw);min-width:var(--lblw);max-width:var(--lblw);font-size:12px;font-weight:800;color:var(--muted);border-right:1px solid var(--line)}
+.sheet thead .lbl{z-index:6}
+.sheet .pc{min-width:var(--colw);width:var(--colw);container-type:inline-size}
+.pname{display:block;width:100%;min-height:52px;border:0;background:transparent;padding:8px 6px 6px;text-align:left;font-size:14px;font-weight:800}
+.pname .cnt{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-top:2px}
+th.win .pname{background:var(--win-bg);color:var(--win-ink);border-radius:10px 10px 0 0}
+th.win .pname .cnt{color:var(--win-ink)}
+.pgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px 3px;padding:8px 6px;justify-items:center}
+.ph{display:inline-flex;align-items:center;justify-content:center;pointer-events:none;
+  width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface-2);
+  font-size:11px;font-weight:800;padding:0;color:var(--muted);line-height:1}
+@container (min-width: 150px){
+  .ph{width:26px;height:26px;font-size:12px}
+}
+.ph[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.ph.current{color:var(--accent-2);background:var(--accent-soft);border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.ph.locked{opacity:.38}
+.sheet tbody td{height:44px;font-size:18px;font-variant-numeric:tabular-nums;font-weight:650}
+.sheet tbody td.out{background:var(--win-bg);color:var(--win-ink);font-weight:800}
+.sheet tbody td.out .star{display:inline-block;margin-right:4px;font-size:13px}
+.sheet tbody tr.last td{font-weight:800}
+.sheet tbody tr.fill{height:100%}
+.sheet tbody tr.fill th,.sheet tbody tr.fill td{height:auto;min-height:28px;border-bottom:0}
+.sheet tfoot{position:sticky;bottom:0;z-index:5}
+.sheet tfoot th,.sheet tfoot td{background:var(--surface);border-top:2px solid var(--line);border-bottom:0;height:50px;font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink)}
+.sheet tfoot .lbl{z-index:7;background:var(--surface-2)}
 .empty td{color:transparent}
+.col-0{box-shadow:inset 0 3px 0 var(--p0)}
+.col-1{box-shadow:inset 0 3px 0 var(--p1)}
+.col-2{box-shadow:inset 0 3px 0 var(--p2)}
+.col-3{box-shadow:inset 0 3px 0 var(--p3)}
+.col-4{box-shadow:inset 0 3px 0 var(--p4)}
+.col-5{box-shadow:inset 0 3px 0 var(--p5)}
 
-/* Aktionsleiste */
-.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid #000;
+.bar{flex:none;position:relative;left:auto;right:auto;bottom:auto;width:auto;
+  margin-left:calc(-1 * var(--sal));margin-right:calc(-1 * var(--sar));
+  background:var(--surface);
+  border-top:1px solid var(--line);
   padding:10px calc(12px + var(--sar)) calc(10px + var(--sab)) calc(12px + var(--sal));z-index:10}
-.bar .row{display:flex;gap:8px;margin-top:8px}
-.bar .row .btn{margin:0;flex:1;font-size:14px;min-height:50px;padding:6px 4px;line-height:1.15}
-.bar .btn:disabled{opacity:.35}
+.bar .row{display:flex;gap:8px;margin-top:0}
+.bar .row .btn{margin:0;flex:1;font-size:14px;min-height:48px;padding:6px 4px;line-height:1.15}
 
-/* Modal (Bottom-Sheet) */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
-.modal{background:#fff;width:100%;max-width:560px;max-height:calc(100% - var(--sat) - 12px);overflow-y:auto;-webkit-overflow-scrolling:touch;
-  border-top:3px solid #000;border-radius:14px 14px 0 0;padding:14px calc(14px + var(--sar)) calc(16px + var(--sab)) calc(14px + var(--sal))}
-.modal h3{margin:0 0 10px;font-size:20px}
-.modal p{margin:0 0 12px}
-.pblock{border:2px solid #000;border-radius:10px;padding:10px;margin-bottom:10px}
-.pblock .head{display:flex;align-items:center;gap:10px}
-.pblock .head label{flex:1;font-weight:700;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pblock .head .inp{width:110px;flex:none;text-align:right;font-size:22px;font-weight:700}
-.chips{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px}
-.chip{min-height:44px;border:2px solid #000;border-radius:8px;background:#fff;font-size:17px;font-weight:700;padding:0}
-.chip[aria-pressed="true"]{background:#000;color:#fff}
-.chiplbl{font-size:12px;font-weight:600;margin-top:8px}
-.err{color:#000;font-weight:700;background:repeating-linear-gradient(45deg,#fff,#fff 6px,#eee 6px,#eee 12px);border:2px solid #000;border-radius:8px;padding:8px;margin-bottom:10px}
+@media (max-height: 820px){
+  header.top{padding-top:calc(var(--sat) + 8px);padding-bottom:8px}
+  .brand{font-size:17px}
+  .brand i{font-size:17px}
+  .medal{width:24px;height:24px;font-size:11px}
+  .bar{display:flex;flex-direction:row;flex-wrap:wrap;align-items:stretch;gap:8px;
+    padding:8px calc(12px + var(--sar)) calc(8px + var(--sab)) calc(12px + var(--sal))}
+  .bar .row{margin:0;flex:1 1 220px;min-width:0}
+  .bar .row .btn{min-height:44px;min-width:0;font-size:15px}
+}
+
+.overlay{position:fixed;inset:0;height:100svh;max-height:100svh;background:var(--overlay);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.modal{background:var(--surface);width:100%;max-width:560px;max-height:calc(100svh - var(--sat) - 12px);overflow:hidden;display:flex;flex-direction:column;
+  border-radius:18px 18px 0 0;padding:16px calc(16px + var(--sar)) 0 calc(16px + var(--sal));
+  box-shadow:var(--shadow)}
+.modal-body{overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;min-height:0;display:flex;flex-direction:column;padding-bottom:calc(12px + var(--sab))}
+.modal h3{margin:0 0 6px;font-size:22px;font-weight:800;flex:none;letter-spacing:-.02em}
+.modal p{margin:0 0 12px;color:var(--muted);font-size:14px;flex:none}
+.round-list{flex:1;min-height:0;overflow-y:auto}
+.modal-actions{flex:none;padding-top:8px}
+.modal-actions .btn{min-height:48px}
+.pblock{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;background:var(--surface-2)}
+.pblock .head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+.pblock .head b{font-size:17px}
+.pblock .head span{font-size:12px;color:var(--muted);text-align:right;max-width:58%}
+.prow{display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px}
+.prow .head{flex:1;min-width:0;margin:0;display:block}
+.prow .head b{display:block;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prow .head span{display:block;font-size:11px;text-align:left;max-width:none}
+.prow .score-row{flex:none}
+.prow .toggle{width:auto;margin:0;min-height:40px;padding:0 10px;font-size:13px;flex:none;white-space:nowrap}
+.toggle.win[aria-checked="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.score-row{display:flex;align-items:center;gap:6px}
+.step{width:44px;min-height:44px;border:0;border-radius:10px;background:var(--surface);border:1px solid var(--line);font-size:22px;font-weight:800}
+.step:disabled{opacity:.3;cursor:default}
+.score-face{min-width:48px;min-height:44px;padding:0 8px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;display:flex;align-items:center;justify-content:center}
+.score-face.ro{background:var(--win-bg);color:var(--win-ink);border-color:var(--accent)}
+.toggle{width:100%;min-height:48px;margin-top:8px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);font-weight:800}
+.toggle[aria-pressed="true"]{background:var(--ok);color:#fff;border-color:var(--ok)}
+.err{color:var(--rose);font-weight:700;background:var(--rose-soft);border-radius:10px;padding:8px;margin-bottom:10px}
+
+@media (max-height: 820px){
+  .overlay{align-items:center;padding:8px}
+  .modal{max-width:min(920px,100%);max-height:calc(100svh - 16px);border-radius:14px;padding:10px 12px 0}
+  .modal-body{padding-bottom:calc(8px + var(--sab))}
+  .modal h3{font-size:18px;margin:0 0 2px}
+  .modal p{margin:0 0 8px;font-size:12px}
+  .modal-actions{display:flex;gap:8px}
+  .modal-actions .btn{margin:0;flex:1;min-height:42px;font-size:15px}
+  .round-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-content:start}
+  .prow{margin:0}
+}
+
+.dock{flex:none;background:var(--kbd);margin:8px -16px 0;padding:12px 12px calc(12px + var(--sab));border-radius:16px 16px 0 0}
+.pad{margin:0;padding:0;background:transparent}
+.keys{display:flex;flex-direction:column;gap:6px}
+.keys .row{display:flex;gap:5px;justify-content:center}
+.keys button{flex:1;min-height:44px;border:0;border-radius:8px;background:var(--kbd-key);color:var(--kbd-ink);font-size:16px;font-weight:700;padding:0}
+.keys button.fn{background:var(--surface-2);font-size:14px;color:var(--muted)}
+.name-preview{min-height:56px;border-radius:12px;background:var(--surface-2);border:1.5px solid var(--line);display:flex;align-items:center;padding:0 14px;font-size:22px;font-weight:800;margin-bottom:12px}
+
+.update{position:fixed;left:12px;right:12px;top:calc(var(--sat) + 8px);z-index:80;background:var(--accent);color:var(--on-accent);
+  border-radius:12px;padding:10px 12px;display:flex;gap:8px;align-items:center;justify-content:space-between;font-weight:800;
+  box-shadow:var(--shadow)}
+.update button{border:0;background:var(--on-accent);color:var(--accent-2);border-radius:10px;min-height:40px;padding:0 12px;font-weight:800}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(130px + env(safe-area-inset-bottom,0px));
+  background:var(--ink);color:var(--surface);padding:10px 14px;border-radius:12px;font-weight:700;z-index:70;
+  max-width:90%;text-align:center;font-size:15px;pointer-events:none}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:86;opacity:0}
 </style>
 </head>
 <body>
 <header class="top">
   <div class="brand"><i>Phase</i><span class="medal" aria-hidden="true">10</span><span>Master</span></div>
-  <div class="subtitle">Wertungsblatt</div>
+  <button type="button" class="theme-btn" id="btnTheme" aria-pressed="false"><span class="dot" aria-hidden="true"></span><span class="theme-lbl">Dunkel</span></button>
 </header>
 
 <main id="app" aria-live="polite"></main>
 
 <nav class="bar hidden" id="bar" aria-label="Aktionen">
-  <button class="btn primary" id="btnRound" type="button">＋ Runde eintragen</button>
   <div class="row">
-    <button class="btn" id="btnUndo" type="button" aria-label="Rückgängig: letzte Aktion zurücknehmen">↶ Rückgängig</button>
-    <button class="btn" id="btnCorrect" type="button">Letzte Eingabe korrigieren</button>
+    <button class="btn primary" id="btnRound" type="button">Runde eintragen</button>
+    <button class="btn" id="btnEditLast" type="button">Runde korrigieren</button>
     <button class="btn" id="btnNew" type="button">Neues Spiel</button>
   </div>
 </nav>
 
 <div id="modalRoot"></div>
+<div id="winRoot"></div>
+<div id="updateRoot"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
 
 <script>
 (function () {
   'use strict';
   var KEY = 'phase10master.state.v1';
   var HKEY = 'phase10master.history.v1';
+  var THEME_KEY = 'phase10master.theme';
   var MAX_HIST = 100;
-  var MAX_PLAYERS = 5;
+  var MIN_PLAYERS = 2;
+  var MAX_PLAYERS = 6;
+  var PHASES = [
+    '4 Zwillinge',
+    '6 Karten einer Farbe',
+    '1 Vierling + 1 Viererfolge',
+    '1 Achterfolge',
+    '7 Karten einer Farbe',
+    '1 Neunerfolge',
+    '2 Vierlinge',
+    '1 Viererfolge einer Farbe + 1 Drilling',
+    '1 Fünfling + 1 Drilling',
+    '1 Fünfling + 1 Dreierfolge einer Farbe'
+  ];
+  var LETTERS = [
+    'qwertzuiopü',
+    'asdfghjklöä',
+    'yxcvbnmß'
+  ];
   var app = document.getElementById('app');
   var bar = document.getElementById('bar');
   var modalRoot = document.getElementById('modalRoot');
 
-  // ---------- Zustand ----------
   function emptyPhases() { return [false,false,false,false,false,false,false,false,false,false]; }
+  function defaultNames() { return ['Spieler 1','Spieler 2','Spieler 3','Spieler 4','Spieler 5','Spieler 6']; }
   function defaultState() {
-    return { v: 1, screen: 'setup', setupCount: 3, setupNames: ['Spieler 1','Spieler 2','Spieler 3','Spieler 4','Spieler 5'],
-             players: [], phases: [], rounds: [] };
+    return { v: 2, screen: 'setup', setupCount: 3, setupNames: defaultNames(), players: [], phases: [], rounds: [] };
   }
   var state = defaultState();
-  var history = []; // [{label, snap}]
+  var history = [];
 
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   function save() {
     try {
       localStorage.setItem(KEY, JSON.stringify(state));
       localStorage.setItem(HKEY, JSON.stringify(history));
-    } catch (e) { /* z.B. privater Modus – App funktioniert trotzdem */ }
+    } catch (e) { /* privater Modus */ }
+  }
+  function compactPhases(ph) {
+    if (!Array.isArray(ph) || ph.length !== 10) return emptyPhases();
+    var n = ph.filter(Boolean).length;
+    return emptyPhases().map(function (_, i) { return i < n; });
+  }
+  function roundScores(r) { return Array.isArray(r) ? r : ((r && r.scores) || []); }
+  function roundAdv(r, n) {
+    var a = (!Array.isArray(r) && r && Array.isArray(r.advanced)) ? r.advanced.slice() : [];
+    while (a.length < n) a.push(false);
+    return a.slice(0, n);
+  }
+  function asRound(r, n) {
+    var scores = roundScores(r).slice(0, n);
+    var winner = -1;
+    if (!Array.isArray(r) && r && typeof r.winner === 'number' && r.winner >= 0 && r.winner < n) winner = r.winner;
+    else {
+      var zeros = [];
+      scores.forEach(function (s, i) { if (!s) zeros.push(i); });
+      if (zeros.length === 1) winner = zeros[0];
+    }
+    return { scores: scores, advanced: roundAdv(r, n), winner: winner };
   }
   function valid(s) {
     if (!s || typeof s !== 'object' || !Array.isArray(s.players) || !Array.isArray(s.phases) || !Array.isArray(s.rounds)) return false;
     if (s.phases.length !== s.players.length) return false;
-    for (var i = 0; i < s.rounds.length; i++) if (!Array.isArray(s.rounds[i]) || s.rounds[i].length !== s.players.length) return false;
+    var n = s.players.length;
+    for (var i = 0; i < s.rounds.length; i++) {
+      var sc = roundScores(s.rounds[i]);
+      if (!Array.isArray(sc) || sc.length !== n) return false;
+    }
     return true;
+  }
+  function migrate(s) {
+    s = Object.assign(defaultState(), s);
+    if (!Array.isArray(s.setupNames)) s.setupNames = defaultNames();
+    while (s.setupNames.length < MAX_PLAYERS) s.setupNames.push('Spieler ' + (s.setupNames.length + 1));
+    s.setupNames = s.setupNames.slice(0, MAX_PLAYERS);
+    if (s.screen === 'setup') {
+      s.setupCount = Math.min(MAX_PLAYERS, Math.max(MIN_PLAYERS, s.setupCount || 3));
+    }
+    s.phases = (s.phases || []).map(compactPhases);
+    var n = (s.players && s.players.length) || 0;
+    if (n) s.rounds = (s.rounds || []).map(function (r) { return asRound(r, n); });
+    s.v = 2;
+    return s;
   }
   function load() {
     try {
       var s = JSON.parse(localStorage.getItem(KEY) || 'null');
-      if (valid(s)) state = Object.assign(defaultState(), s);
+      if (valid(s)) state = migrate(s);
       var h = JSON.parse(localStorage.getItem(HKEY) || '[]');
-      if (Array.isArray(h)) history = h.filter(function (x) { return x && valid(x.snap); });
+      if (Array.isArray(h)) history = h.filter(function (x) { return x && valid(x.snap); }).map(function (x) {
+        return { label: x.label, snap: migrate(x.snap) };
+      });
     } catch (e) { state = defaultState(); history = []; }
     if (state.screen === 'game' && !state.players.length) state.screen = 'setup';
   }
-  // Jede Änderung: vorherigen Zustand auf den Undo-Stapel legen
   function commit(label, mutate) {
     history.push({ label: label, snap: clone(state) });
     if (history.length > MAX_HIST) history.shift();
@@ -183,18 +358,20 @@ th.win .pname{background:#000;color:#fff}
   function undo() {
     var h = history.pop();
     if (!h) return;
-    state = Object.assign(defaultState(), h.snap);
+    state = migrate(h.snap);
     save();
     render();
     toast('Rückgängig: ' + h.label);
   }
 
-  // ---------- Hilfen ----------
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function totals() {
-    return state.players.map(function (_, i) { return state.rounds.reduce(function (a, r) { return a + (r[i] || 0); }, 0); });
+    return state.players.map(function (_, i) {
+      return state.rounds.reduce(function (a, r) { return a + (roundScores(r)[i] || 0); }, 0);
+    });
   }
   function doneCount(i) { return state.phases[i].filter(Boolean).length; }
+  function nextPhase(i) { return doneCount(i); }
   function winnerInfo() {
     var t = totals();
     var done = [];
@@ -204,27 +381,109 @@ th.win .pname{background:#000;color:#fff}
     var w = done.filter(function (i) { return t[i] === min; });
     return { winners: w, points: min, tie: w.length > 1 };
   }
-  function parsePts(v) {
-    v = String(v == null ? '' : v).replace(/\D/g, '');
-    if (v === '') return 0;
-    var n = parseInt(v, 10);
-    return isFinite(n) ? Math.min(n, 99999) : 0;
-  }
   var toastTimer;
   function toast(msg) {
     var el = document.getElementById('toast');
     if (!el) {
       el = document.createElement('div'); el.id = 'toast'; el.setAttribute('role', 'status');
-      el.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));background:#000;color:#fff;padding:10px 14px;border-radius:10px;font-weight:600;z-index:60;max-width:90%;text-align:center;font-size:15px;pointer-events:none';
       document.body.appendChild(el);
     }
     el.textContent = msg; el.style.display = 'block';
     clearTimeout(toastTimer); toastTimer = setTimeout(function () { el.style.display = 'none'; }, 1800);
   }
+  function isStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
 
-  // ---------- Render ----------
+  var fxRaf = 0;
+  function celebrate() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var canvas = document.getElementById('fx');
+    if (!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    var W = 0, H = 0;
+    function resize() {
+      W = window.innerWidth; H = window.innerHeight;
+      canvas.width = Math.floor(W * dpr);
+      canvas.height = Math.floor(H * dpr);
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    var colors = ['#0d9488', '#2dd4bf', '#f59e0b', '#f43f5e', '#3b82f6', '#8b5cf6', '#f97316', '#fde68a'];
+    var pieces = [];
+    var sparks = [];
+    function burst(x, y, n) {
+      for (var i = 0; i < n; i++) {
+        var a = Math.random() * Math.PI * 2;
+        var sp = 2 + Math.random() * 7;
+        sparks.push({
+          x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 1,
+          life: 1, color: colors[(Math.random() * colors.length) | 0], r: 1.4 + Math.random() * 2.2
+        });
+      }
+    }
+    for (var i = 0; i < 220; i++) {
+      pieces.push({
+        x: Math.random() * W,
+        y: Math.random() * H * 0.7 - 40,
+        w: 7 + Math.random() * 9,
+        h: 9 + Math.random() * 11,
+        vx: -1.6 + Math.random() * 3.2,
+        vy: 2.6 + Math.random() * 3.8,
+        rot: Math.random() * Math.PI,
+        vr: -0.24 + Math.random() * 0.48,
+        color: colors[(Math.random() * colors.length) | 0],
+        circle: Math.random() < 0.32
+      });
+    }
+    burst(W * 0.2, H * 0.28, 90);
+    burst(W * 0.5, H * 0.18, 110);
+    burst(W * 0.8, H * 0.3, 90);
+    var start = performance.now();
+    var duration = 5000;
+    canvas.style.opacity = '1';
+    cancelAnimationFrame(fxRaf);
+    function tick(now) {
+      var t = now - start;
+      var fade = t > duration - 700 ? Math.max(0, (duration - t) / 700) : 1;
+      ctx.clearRect(0, 0, W, H);
+      if (t < 2800 && Math.random() < 0.08) {
+        burst(W * (0.1 + Math.random() * 0.8), H * (0.08 + Math.random() * 0.38), 56);
+      }
+      for (var p = 0; p < pieces.length; p++) {
+        var c = pieces[p];
+        c.x += c.vx; c.y += c.vy; c.rot += c.vr;
+        if (c.y > H + 24) { c.y = -24; c.x = Math.random() * W; }
+        ctx.save();
+        ctx.translate(c.x, c.y);
+        ctx.rotate(c.rot);
+        ctx.globalAlpha = fade;
+        ctx.fillStyle = c.color;
+        if (c.circle) { ctx.beginPath(); ctx.arc(0, 0, c.w / 2, 0, Math.PI * 2); ctx.fill(); }
+        else ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+        ctx.restore();
+      }
+      for (var s = sparks.length - 1; s >= 0; s--) {
+        var k = sparks[s];
+        k.x += k.vx; k.y += k.vy; k.vy += 0.09; k.life -= 0.016;
+        if (k.life <= 0) { sparks.splice(s, 1); continue; }
+        ctx.globalAlpha = k.life * fade;
+        ctx.fillStyle = k.color;
+        ctx.beginPath(); ctx.arc(k.x, k.y, k.r, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      if (t < duration) fxRaf = requestAnimationFrame(tick);
+      else { ctx.clearRect(0, 0, W, H); canvas.style.opacity = '0'; }
+    }
+    fxRaf = requestAnimationFrame(tick);
+  }
+
   function render() {
     if (state.screen === 'setup') renderSetup(); else renderGame();
+    paintWinnerCard();
   }
 
   function renderSetup() {
@@ -232,21 +491,24 @@ th.win .pname{background:#000;color:#fff}
     app.className = 'setup-main';
     var n = state.setupCount;
     var h = '<h2>Neues Spiel</h2>';
-    h += '<div class="field"><span id="cntLbl">Anzahl Spieler</span></div>';
+    h += '<div class="field"><span id="cntLbl" class="hint" style="margin:0 0 8px;display:block">Anzahl Spieler</span></div>';
     h += '<div class="seg" role="group" aria-labelledby="cntLbl">';
-    for (var k = 1; k <= MAX_PLAYERS; k++) {
+    for (var k = MIN_PLAYERS; k <= MAX_PLAYERS; k++) {
       h += '<button type="button" data-count="' + k + '" aria-pressed="' + (k === n) + '" aria-label="' + k + ' Spieler">' + k + '</button>';
     }
     h += '</div>';
     for (var i = 0; i < n; i++) {
-      h += '<label class="field"><span>Name Spieler ' + (i + 1) + '</span>' +
-        '<input type="text" maxlength="20" autocomplete="off" autocapitalize="words" enterkeyhint="next" data-name="' + i + '" value="' + esc(state.setupNames[i] || ('Spieler ' + (i + 1))) + '"></label>';
+      h += '<button type="button" class="name-btn" data-editname="' + i + '"><span><span class="k">Spieler ' + (i + 1) + '</span><span class="v" style="display:block">' +
+        esc(state.setupNames[i] || ('Spieler ' + (i + 1))) + '</span></span><span class="edit">Ändern</span></button>';
     }
     h += '<button class="btn primary" type="button" id="btnStart">Spiel starten</button>';
     if (history.length && state.players.length) {
-      h += '<button class="btn" type="button" id="btnBackGame">↶ Zurück zum letzten Spiel</button>';
+      h += '<button class="btn" type="button" id="btnBackGame">Zurück zum letzten Spiel</button>';
     }
-    h += '<p class="hint">Phase 10 Master: Die Phasen dürfen in beliebiger Reihenfolge erfüllt werden. Wer zuerst alle 10 Phasen hat, gewinnt – bei mehreren gewinnt, wer die wenigsten Minuspunkte hat.</p>';
+    if (!isStandalone()) {
+      h += '<p class="install">Als App: im Browser <b>Teilen → Zum Home-Bildschirm</b> (iPad/iPhone) oder „App installieren“.</p>';
+    }
+    h += '<p class="hint">Phasen der Reihe nach. Wer zuerst alle 10 hat, gewinnt – bei mehreren die wenigsten Minuspunkte. Jede Restkarte zählt 1 Punkt.</p>';
     app.innerHTML = h;
   }
 
@@ -257,64 +519,97 @@ th.win .pname{background:#000;color:#fff}
     var t = totals();
     var w = winnerInfo();
     var h = '';
-    if (w) {
-      var names = w.winners.map(function (i) { return esc(state.players[i]); });
-      h += '<div class="banner" role="alert">' + (w.tie ? 'Gleichstand: ' + names.join(' &amp; ') : 'Gewinner: ' + names[0]) +
-        '<small>alle 10 Phasen · ' + w.points + ' Punkte</small></div>';
-    }
-    var colw = Math.max(84, Math.floor((Math.min(window.innerWidth, 560) - 24 - 4 - 36) / n));
-    h += '<div class="sheet-wrap" style="--colw:' + colw + 'px"><table class="sheet" aria-label="Wertungsblatt">';
-    // Namen
+    var avail = Math.max(200, app.clientWidth - 28 - 8 - 42);
+    var colw = Math.max(120, Math.floor(avail / n));
+    h += '<div class="sheet-card"><div class="sheet-wrap" style="--colw:' + colw + 'px"><table class="sheet" aria-label="Wertungsblatt">';
     h += '<thead><tr><th class="lbl" scope="col"><span class="hidden">Runde</span></th>';
     for (var i = 0; i < n; i++) {
       var isWin = w && w.winners.indexOf(i) >= 0;
-      h += '<th class="pc' + (isWin ? ' win' : '') + '" scope="col"><button type="button" class="pname" data-rename="' + i + '" aria-label="' + esc(state.players[i]) + ', ' + doneCount(i) + ' von 10 Phasen. Namen ändern">' +
-        esc(state.players[i]) + '<span class="cnt">' + doneCount(i) + '/10</span></button></th>';
+      var nxt = nextPhase(i);
+      h += '<th class="pc col-' + i + (isWin ? ' win' : '') + '" scope="col"><button type="button" class="pname" data-rename="' + i + '" aria-label="' +
+        esc(state.players[i]) + ', ' + doneCount(i) + ' von 10 Phasen. Namen ändern">' +
+        esc(state.players[i]) + '<span class="cnt">' + (nxt >= 10 ? 'fertig' : 'Phase ' + (nxt + 1) + ': ' + PHASES[nxt]) + ' · ' + doneCount(i) + '/10</span></button></th>';
     }
-    h += '</tr>';
-    // Phasen
-    h += '<tr><th class="lbl" scope="row" aria-label="Phasen">Ph.</th>';
+    h += '</tr><tr><th class="lbl" scope="row" aria-label="Phasen">Ph.</th>';
     for (i = 0; i < n; i++) {
       h += '<td class="pc"><div class="pgrid">';
-      for (var p = 0; p < 9; p++) h += phaseBtn(i, p, 'ph');
-      h += '<div class="ph10wrap">' + phaseBtn(i, 9, 'ph10') + '</div></div></td>';
+      for (var p = 0; p < 10; p++) h += phaseBtn(i, p);
+      h += '</div></td>';
     }
     h += '</tr></thead><tbody>';
-    // Runden
     var rows = state.rounds.length;
     for (var r = 0; r < rows; r++) {
+      var rnd = asRound(state.rounds[r], n);
       h += '<tr' + (r === rows - 1 ? ' class="last"' : '') + '><th class="lbl" scope="row">' + (r + 1) + '</th>';
-      for (i = 0; i < n; i++) h += '<td>' + state.rounds[r][i] + '</td>';
+      for (i = 0; i < n; i++) {
+        var isOut = rnd.winner === i;
+        h += '<td' + (isOut ? ' class="out" title="Runde gewonnen"' : '') + '>' + (isOut ? '<span class="star" aria-hidden="true">★</span>' : '') + (rnd.scores[i] || 0) + '</td>';
+      }
       h += '</tr>';
     }
-    for (r = rows; r < Math.max(5, rows + 1); r++) { // leere Zeilen wie auf dem Papier
-      h += '<tr class="empty" aria-hidden="true"><th class="lbl"></th>';
-      for (i = 0; i < n; i++) h += '<td></td>';
-      h += '</tr>';
-    }
+    h += '<tr class="empty fill" aria-hidden="true"><th class="lbl"></th>';
+    for (i = 0; i < n; i++) h += '<td></td>';
+    h += '</tr>';
     h += '</tbody><tfoot><tr><th class="lbl" scope="row" aria-label="Summe">=</th>';
-    for (i = 0; i < n; i++) h += '<td data-total="' + i + '">' + t[i] + '</td>';
-    h += '</tr></tfoot></table></div>';
-    h += '<p class="hint">Phasen antippen zum Abhaken (beliebige Reihenfolge). Namen antippen zum Umbenennen.</p>';
+    for (i = 0; i < n; i++) h += '<td>' + t[i] + '</td>';
+    h += '</tr></tfoot></table></div></div>';
     var oldWrap = app.querySelector('.sheet-wrap');
     var keepX = oldWrap ? oldWrap.scrollLeft : 0;
     app.innerHTML = h;
-    if (keepX) app.querySelector('.sheet-wrap').scrollLeft = keepX; // horizontale Position beim Neuzeichnen behalten
-    var u = document.getElementById('btnUndo');
-    u.disabled = !history.length;
-    u.setAttribute('aria-label', history.length ? 'Rückgängig: ' + history[history.length - 1].label : 'Rückgängig (nichts zum Zurücknehmen)');
-  }
-  function phaseBtn(i, p, cls) {
-    var on = !!state.phases[i][p];
-    return '<button type="button" class="' + cls + '" data-player="' + i + '" data-phase="' + p + '" aria-pressed="' + on + '" aria-label="' +
-      esc(state.players[i]) + ': Phase ' + (p + 1) + '">' + (p + 1) + '</button>';
+    if (keepX) app.querySelector('.sheet-wrap').scrollLeft = keepX;
+    var ed = document.getElementById('btnEditLast');
+    ed.disabled = !state.rounds.length;
+    ed.setAttribute('aria-label', state.rounds.length ? 'Runde ' + state.rounds.length + ' korrigieren' : 'Runde korrigieren (noch keine Runde)');
+    var roundBtn = document.getElementById('btnRound');
+    var newBtn = document.getElementById('btnNew');
+    var finished = !!w;
+    roundBtn.disabled = finished;
+    roundBtn.setAttribute('aria-label', finished ? 'Runde eintragen (Spiel beendet)' : 'Runde eintragen');
+    roundBtn.classList.toggle('primary', !finished);
+    newBtn.classList.toggle('primary', finished);
   }
 
-  // ---------- Modals ----------
+  function paintWinnerCard() {
+    var root = document.getElementById('winRoot');
+    if (!root) return;
+    var w = state.screen === 'game' ? winnerInfo() : null;
+    if (!w) {
+      if (state.winDismissed) { state.winDismissed = false; save(); }
+      root.innerHTML = '';
+      return;
+    }
+    if (state.winDismissed) { root.innerHTML = ''; return; }
+    var names = w.winners.map(function (i) { return esc(state.players[i]); });
+    var title = w.tie ? 'Gleichstand' : 'Gewinner';
+    var who = w.tie ? names.join(' &amp; ') : names[0];
+    root.innerHTML = '<div class="win-overlay" id="winOverlay" role="dialog" aria-modal="true" aria-labelledby="winTitle">' +
+      '<button type="button" class="win-card" id="winCard">' +
+      '<div class="win-kicker">' + title + '</div>' +
+      '<div class="win-name" id="winTitle">' + who + '</div>' +
+      '<small>alle 10 Phasen · ' + w.points + ' Minuspunkte</small>' +
+      '<span class="win-hint">Tippen zum Schließen</span>' +
+      '</button></div>';
+  }
+  function dismissWinnerCard() {
+    if (!winnerInfo() || state.winDismissed) return;
+    state.winDismissed = true;
+    save();
+    paintWinnerCard();
+  }
+  function phaseBtn(i, p) {
+    var on = !!state.phases[i][p];
+    var nxt = nextPhase(i);
+    var current = !on && p === nxt;
+    var locked = !on && p !== nxt;
+    return '<span class="ph' + (current ? ' current' : '') + (locked ? ' locked' : '') + '" aria-pressed="' + on + '" title="' +
+      esc(state.players[i] + ': Phase ' + (p + 1) + ' · ' + PHASES[p]) + '">' + (p + 1) + '</span>';
+  }
+
   var lastFocus = null;
-  function openModal(html, onReady) {
+  function openModal(html, onReady, dock) {
     lastFocus = document.activeElement;
-    modalRoot.innerHTML = '<div class="overlay" id="overlay"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">' + html + '</div></div>';
+    modalRoot.innerHTML = '<div class="overlay" id="overlay"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="modal-body">' + html + '</div>' +
+      (dock ? '<div class="dock">' + dock + '</div>' : '') + '</div></div>';
     document.body.style.overflow = 'hidden';
     var ov = document.getElementById('overlay');
     ov.addEventListener('click', function (e) { if (e.target === ov) closeModal(); });
@@ -327,98 +622,223 @@ th.win .pname{background:#000;color:#fff}
   }
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modalRoot.firstChild) closeModal(); });
 
-  // Runde eintragen / letzte Runde bearbeiten
+  function setPhase(i, complete) {
+    var d = doneCount(i);
+    if (complete) {
+      if (d >= 10) return false;
+      state.phases[i][d] = true;
+      return true;
+    }
+    if (d <= 0) return false;
+    state.phases[i][d - 1] = false;
+    return true;
+  }
+
   function openRoundModal(editIndex) {
     var edit = typeof editIndex === 'number';
+    if (!edit && winnerInfo()) return;
     var n = state.players.length;
-    var tmpPh = clone(state.phases);
-    var h = '<h3 id="mTitle">' + (edit ? 'Runde ' + (editIndex + 1) + ' korrigieren' : 'Runde ' + (state.rounds.length + 1) + ' eintragen') + '</h3>';
-    h += '<div id="mErr" class="err hidden" role="alert"></div>';
+    var prev = edit ? asRound(state.rounds[editIndex], n) : null;
+    var pts = [];
+    var adv = [];
+    var winner = prev ? prev.winner : -1;
     for (var i = 0; i < n; i++) {
-      var val = edit ? state.rounds[editIndex][i] : 0;
-      h += '<div class="pblock"><div class="head"><label for="pts' + i + '">' + esc(state.players[i]) + '</label>' +
-        '<input class="inp" id="pts' + i + '" data-pts="' + i + '" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" value="' + val + '" aria-label="Minuspunkte ' + esc(state.players[i]) + '"></div>';
-      h += '<div class="chiplbl">Erfüllte Phasen</div><div class="chips" role="group" aria-label="Phasen ' + esc(state.players[i]) + '">';
-      for (var p = 0; p < 10; p++) {
-        h += '<button type="button" class="chip" data-mp="' + i + '" data-mph="' + p + '" aria-pressed="' + !!tmpPh[i][p] + '" aria-label="' + esc(state.players[i]) + ': Phase ' + (p + 1) + '">' + (p + 1) + '</button>';
-      }
-      h += '</div></div>';
+      pts[i] = prev ? (prev.scores[i] || 0) : 10;
+      adv[i] = prev ? !!prev.advanced[i] : false;
     }
+    if (winner >= 0) pts[winner] = 0;
+    var h = '<h3 id="mTitle">' + (edit ? 'Runde ' + (editIndex + 1) : 'Runde ' + (state.rounds.length + 1)) + '</h3>';
+    h += '<p>Eine Person „Aus“ (0 Punkte, Phase geschafft). Ohne Phase mindestens 10 Restkarten.</p>';
+    h += '<div id="mErr" class="err hidden" role="alert"></div>';
+    h += '<div class="round-list" role="radiogroup" aria-label="Wer hat ausgemacht">';
+    for (i = 0; i < n; i++) {
+      var d = doneCount(i);
+      var was = adv[i];
+      var phNo = was ? d : d + 1;
+      var phTxt = (!was && d >= 10) ? 'fertig' : 'Phase ' + phNo;
+      var canPh = was || d < 10;
+      h += '<div class="pblock prow" data-block="' + i + '"><div class="head"><b>' + esc(state.players[i]) + '</b><span>' + esc(phTxt) + '</span></div>';
+      h += '<div class="score-row"><button type="button" class="step" data-delta="-1" data-who="' + i + '" aria-label="Minuspunkte verringern für ' + esc(state.players[i]) + '">−</button>';
+      h += '<div class="score-face" data-score="' + i + '">' + pts[i] + '</div>';
+      h += '<button type="button" class="step" data-delta="1" data-who="' + i + '" aria-label="Minuspunkte erhöhen für ' + esc(state.players[i]) + '">+</button></div>';
+      h += '<button type="button" class="toggle win" data-win="' + i + '" role="radio" aria-checked="' + (winner === i) + '">Aus</button>';
+      if (canPh) {
+        h += '<button type="button" class="toggle" data-adv="' + i + '" aria-pressed="' + was + '">Phase</button>';
+      }
+      h += '</div>';
+    }
+    h += '</div><div class="modal-actions">';
     h += '<button class="btn primary" type="button" id="mSave">Speichern</button>';
-    if (edit) h += '<button class="btn" type="button" id="mDelete">Runde ' + (editIndex + 1) + ' löschen</button>';
-    h += '<button class="btn" type="button" id="mCancel">Abbrechen</button>';
+    if (edit) h += '<button class="btn danger" type="button" id="mDelete">Löschen</button>';
+    h += '<button class="btn" type="button" id="mCancel">Abbrechen</button></div>';
     openModal(h, function (m) {
+      function canPhNow(i) {
+        var d = doneCount(i);
+        return (prev && prev.advanced[i]) || d < 10;
+      }
+      function minPts(i) {
+        if (i === winner) return 0;
+        return adv[i] ? 0 : 10;
+      }
+      function maxPts(i) {
+        return i === winner ? 0 : 20;
+      }
+      function clampPts(i) {
+        pts[i] = Math.max(minPts(i), Math.min(maxPts(i), pts[i]));
+      }
+      function paint() {
+        for (var pi = 0; pi < n; pi++) clampPts(pi);
+        m.querySelectorAll('[data-score]').forEach(function (el) {
+          var i = +el.getAttribute('data-score');
+          el.textContent = String(pts[i]);
+          el.classList.toggle('ro', i === winner);
+        });
+        m.querySelectorAll('[data-who]').forEach(function (b) {
+          var i = +b.getAttribute('data-who');
+          var next = pts[i] + (+b.getAttribute('data-delta'));
+          b.disabled = next < minPts(i) || next > maxPts(i);
+        });
+        m.querySelectorAll('[data-win]').forEach(function (b) {
+          b.setAttribute('aria-checked', String(+b.getAttribute('data-win') === winner));
+        });
+        m.querySelectorAll('[data-adv]').forEach(function (b) {
+          b.setAttribute('aria-pressed', String(!!adv[+b.getAttribute('data-adv')]));
+        });
+        var save = document.getElementById('mSave');
+        if (save) save.disabled = winner < 0;
+      }
+      paint();
       m.addEventListener('click', function (e) {
-        var c = e.target.closest('[data-mph]');
-        if (c) {
-          var pi = +c.getAttribute('data-mp'), ph = +c.getAttribute('data-mph');
-          tmpPh[pi][ph] = !tmpPh[pi][ph];
-          c.setAttribute('aria-pressed', String(tmpPh[pi][ph]));
-          return;
+        var t = e.target.closest('button');
+        if (!t || t.disabled) return;
+        if (t.hasAttribute('data-who')) {
+          var who = +t.getAttribute('data-who');
+          pts[who] += (+t.getAttribute('data-delta'));
+          clampPts(who);
+          paint(); return;
         }
-        if (e.target.id === 'mCancel') closeModal();
-        if (e.target.id === 'mDelete') {
+        if (t.hasAttribute('data-win')) {
+          var wi = +t.getAttribute('data-win');
+          if (winner >= 0 && winner !== wi) {
+            adv[winner] = false;
+            pts[winner] = 10;
+          }
+          winner = wi;
+          pts[winner] = 0;
+          if (canPhNow(winner)) adv[winner] = true;
+          paint(); return;
+        }
+        if (t.hasAttribute('data-adv')) {
+          var ai = +t.getAttribute('data-adv');
+          if (ai === winner) { adv[ai] = true; paint(); return; }
+          adv[ai] = !adv[ai];
+          clampPts(ai);
+          paint(); return;
+        }
+        if (t.id === 'mCancel') closeModal();
+        if (t.id === 'mDelete') {
           closeModal();
-          commit('Runde ' + (editIndex + 1) + ' gelöscht', function () { state.rounds.splice(editIndex, 1); });
+          commit('Runde ' + (editIndex + 1) + ' gelöscht', function () {
+            asRound(state.rounds[editIndex], n).advanced.forEach(function (on, pi) { if (on) setPhase(pi, false); });
+            state.rounds.splice(editIndex, 1);
+          });
           toast('Runde gelöscht');
         }
-        if (e.target.id === 'mSave') {
-          var pts = [], bad = false;
-          m.querySelectorAll('[data-pts]').forEach(function (inp) {
-            var raw = inp.value.trim();
-            if (raw !== '' && !/^\d+$/.test(raw)) bad = true;
-            pts[+inp.getAttribute('data-pts')] = parsePts(raw);
-          });
-          if (bad) {
+        if (t.id === 'mSave') {
+          if (winner < 0) {
             var er = document.getElementById('mErr');
-            er.textContent = 'Bitte nur ganze Zahlen ab 0 eingeben.'; er.classList.remove('hidden'); er.scrollIntoView({ block: 'nearest' });
+            er.textContent = 'Speichern geht erst, wenn genau eine Person „Aus“ hat.';
+            er.classList.remove('hidden');
             return;
           }
+          pts[winner] = 0;
+          if (canPhNow(winner)) adv[winner] = true;
+          for (var si = 0; si < n; si++) {
+            if (si === winner) continue;
+            if (!adv[si] && pts[si] < 10) {
+              var er2 = document.getElementById('mErr');
+              er2.textContent = state.players[si] + ': ohne Phase mindestens 10 Punkte.';
+              er2.classList.remove('hidden');
+              return;
+            }
+          }
           closeModal();
+          var hadWinner = !!winnerInfo();
           commit(edit ? 'Runde ' + (editIndex + 1) + ' korrigiert' : 'Runde ' + (state.rounds.length + 1) + ' eingetragen', function () {
-            if (edit) state.rounds[editIndex] = pts; else state.rounds.push(pts);
-            state.phases = tmpPh;
+            var rec = { scores: pts.slice(), advanced: adv.slice(), winner: winner };
+            if (edit) {
+              prev.advanced.forEach(function (wasOn, pi) {
+                if (wasOn && !adv[pi]) setPhase(pi, false);
+                if (!wasOn && adv[pi]) setPhase(pi, true);
+              });
+              state.rounds[editIndex] = rec;
+            } else {
+              state.rounds.push(rec);
+              adv.forEach(function (on, pi) { if (on) setPhase(pi, true); });
+            }
           });
+          if (!hadWinner && winnerInfo()) celebrate();
         }
-      });
-      m.querySelectorAll('[data-pts]').forEach(function (inp) {
-        inp.addEventListener('focus', function () { setTimeout(function () { try { inp.setSelectionRange(0, inp.value.length); } catch (e) {} }, 0); });
-        inp.addEventListener('input', function () { var c = inp.value.replace(/\D/g, ''); if (c !== inp.value) inp.value = c; });
-        inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); document.getElementById('mSave').click(); } });
       });
     });
   }
 
-  function openCorrectModal() {
-    var last = history[history.length - 1];
-    var h = '<h3 id="mTitle">Letzte Eingabe korrigieren</h3>';
-    if (!last && !state.rounds.length) h += '<p>Es gibt noch nichts zu korrigieren.</p>';
-    if (last) h += '<button class="btn primary" type="button" id="cUndo">↶ Rückgängig: ' + esc(last.label) + '</button>';
-    if (state.rounds.length) {
-      h += '<button class="btn" type="button" id="cEdit">Runde ' + state.rounds.length + ' bearbeiten (Punkte &amp; Phasen)</button>';
-      h += '<button class="btn" type="button" id="cDel">Runde ' + state.rounds.length + ' löschen</button>';
-    }
-    h += '<button class="btn" type="button" id="cCancel">Abbrechen</button>';
+  function openNameModal(kind, index) {
+    var value = kind === 'setup' ? (state.setupNames[index] || '') : state.players[index];
+    var caps = !value.length;
+    var h = '<h3 id="mTitle">Name</h3><div class="name-preview" id="namePrev">' + esc(value) + '</div>';
+    var dock = '<div class="pad"><div class="keys" id="keys"></div>';
+    dock += '<div class="row" style="display:flex;gap:8px;margin-top:8px"><button type="button" class="btn" id="nCancel" style="margin:0">Abbrechen</button>';
+    dock += '<button type="button" class="btn primary" id="nOk" style="margin:0">Fertig</button></div></div>';
     openModal(h, function (m) {
+      var prev = document.getElementById('namePrev');
+      function drawKeys() {
+        var html = '';
+        LETTERS.forEach(function (row, ri) {
+          html += '<div class="row">';
+          if (ri === 2) html += '<button type="button" class="fn" data-k="shift">⇧</button>';
+          for (var i = 0; i < row.length; i++) {
+            var ch = row[i];
+            var show = (caps && ch !== 'ß') ? ch.toUpperCase() : ch;
+            html += '<button type="button" data-k="' + esc(show) + '">' + esc(show) + '</button>';
+          }
+          if (ri === 2) html += '<button type="button" class="fn" data-k="del">⌫</button>';
+          html += '</div>';
+        });
+        html += '<div class="row"><button type="button" class="fn" data-k="space" style="flex:3">Leer</button></div>';
+        document.getElementById('keys').innerHTML = html;
+      }
+      drawKeys();
       m.addEventListener('click', function (e) {
-        var id = e.target.id;
-        if (id === 'cCancel') closeModal();
-        if (id === 'cUndo') { closeModal(); undo(); }
-        if (id === 'cEdit') { closeModal(); openRoundModal(state.rounds.length - 1); }
-        if (id === 'cDel') {
-          var k = state.rounds.length;
+        var t = e.target.closest('button');
+        if (!t) return;
+        var k = t.getAttribute('data-k');
+        if (k === 'shift') { caps = !caps; drawKeys(); return; }
+        if (k === 'del') { value = value.slice(0, -1); caps = !value.length; prev.textContent = value; drawKeys(); return; }
+        if (k === 'space') { if (value.length < 20) { value += ' '; caps = true; prev.textContent = value; drawKeys(); } return; }
+        if (k && k.length === 1) {
+          if (value.length < 20) { value += k; caps = false; prev.textContent = value; drawKeys(); }
+          return;
+        }
+        if (t.id === 'nCancel') closeModal();
+        if (t.id === 'nOk') {
+          var nn = value.trim().slice(0, 20);
+          if (!nn) nn = 'Spieler ' + (index + 1);
           closeModal();
-          commit('Runde ' + k + ' gelöscht', function () { state.rounds.pop(); });
-          toast('Runde ' + k + ' gelöscht');
+          if (kind === 'setup') {
+            state.setupNames[index] = nn; save(); render();
+          } else if (nn !== state.players[index]) {
+            commit('Umbenannt: ' + state.players[index] + ' → ' + nn, function () { state.players[index] = nn; });
+          }
         }
       });
-    });
+    }, dock);
   }
 
   function openNewGameModal() {
-    var h = '<h3 id="mTitle">Neues Spiel starten?</h3><p>Punkte und Phasen des aktuellen Spiels werden zurückgesetzt. (Mit „Rückgängig“ lässt sich das zurücknehmen.)</p>';
-    h += '<button class="btn primary" type="button" id="nSame">Gleiche Spieler – neu starten</button>';
-    h += '<button class="btn" type="button" id="nSetup">Zur Spielerauswahl</button>';
+    var h = '<h3 id="mTitle">Neues Spiel?</h3><p>Punkte und Phasen des aktuellen Spiels werden zurückgesetzt.</p>';
+    h += '<button class="btn primary" type="button" id="nSame">Gleiche Spieler</button>';
+    h += '<button class="btn" type="button" id="nSetup">Spieler neu wählen</button>';
     h += '<button class="btn" type="button" id="nCancel">Abbrechen</button>';
     openModal(h, function (m) {
       m.addEventListener('click', function (e) {
@@ -426,13 +846,17 @@ th.win .pname{background:#000;color:#fff}
         if (id === 'nCancel') closeModal();
         if (id === 'nSame') {
           closeModal();
-          commit('Neues Spiel', function () { state.rounds = []; state.phases = state.players.map(emptyPhases); });
+          commit('Neues Spiel', function () {
+            state.rounds = [];
+            state.phases = state.players.map(emptyPhases);
+            state.winDismissed = false;
+          });
           toast('Neues Spiel gestartet');
         }
         if (id === 'nSetup') {
           closeModal();
           commit('Neues Spiel (Spielerauswahl)', function () {
-            state.setupCount = state.players.length || 3;
+            state.setupCount = Math.min(MAX_PLAYERS, Math.max(MIN_PLAYERS, state.players.length || 3));
             state.players.forEach(function (p, i) { state.setupNames[i] = p; });
             state.screen = 'setup';
           });
@@ -441,18 +865,19 @@ th.win .pname{background:#000;color:#fff}
     });
   }
 
-  // ---------- Events ----------
   app.addEventListener('click', function (e) {
     var t = e.target.closest('button');
     if (!t) return;
     if (t.hasAttribute('data-count')) {
-      syncSetupNames();
       state.setupCount = +t.getAttribute('data-count');
       save(); render();
       return;
     }
+    if (t.hasAttribute('data-editname')) {
+      openNameModal('setup', +t.getAttribute('data-editname'));
+      return;
+    }
     if (t.id === 'btnStart') {
-      syncSetupNames();
       var n = state.setupCount;
       commit('Spiel gestartet', function () {
         state.players = [];
@@ -462,45 +887,29 @@ th.win .pname{background:#000;color:#fff}
         }
         state.phases = state.players.map(emptyPhases);
         state.rounds = [];
+        state.winDismissed = false;
         state.screen = 'game';
       });
       window.scrollTo(0, 0);
       return;
     }
     if (t.id === 'btnBackGame') { undo(); return; }
-    if (t.hasAttribute('data-phase')) {
-      var pi = +t.getAttribute('data-player'), ph = +t.getAttribute('data-phase');
-      var on = !state.phases[pi][ph];
-      commit('Phase ' + (ph + 1) + (on ? ' abgehakt' : ' entfernt') + ' bei ' + state.players[pi], function () { state.phases[pi][ph] = on; });
-      return;
-    }
     if (t.hasAttribute('data-rename')) {
-      var ri = +t.getAttribute('data-rename');
-      var nn = window.prompt('Neuer Name für ' + state.players[ri] + ':', state.players[ri]);
-      if (nn != null && nn.trim() && nn.trim() !== state.players[ri]) {
-        nn = nn.trim().slice(0, 20);
-        commit('Umbenannt: ' + state.players[ri] + ' → ' + nn, function () { state.players[ri] = nn; });
-      }
+      openNameModal('player', +t.getAttribute('data-rename'));
     }
   });
-  app.addEventListener('input', function (e) {
-    if (e.target.hasAttribute('data-name')) { syncSetupNames(); save(); }
+
+  document.getElementById('btnRound').addEventListener('click', function () {
+    if (this.disabled || winnerInfo()) return;
+    openRoundModal();
   });
-  app.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' && e.target.hasAttribute('data-name')) {
-      e.preventDefault();
-      var next = app.querySelector('[data-name="' + (+e.target.getAttribute('data-name') + 1) + '"]');
-      if (next) next.focus(); else e.target.blur();
-    }
+  document.getElementById('btnEditLast').addEventListener('click', function () {
+    if (!state.rounds.length) return;
+    openRoundModal(state.rounds.length - 1);
   });
-  function syncSetupNames() {
-    app.querySelectorAll('[data-name]').forEach(function (inp) { state.setupNames[+inp.getAttribute('data-name')] = inp.value; });
-  }
-  document.getElementById('btnRound').addEventListener('click', function () { openRoundModal(); });
-  document.getElementById('btnUndo').addEventListener('click', undo);
-  document.getElementById('btnCorrect').addEventListener('click', openCorrectModal);
   document.getElementById('btnNew').addEventListener('click', openNewGameModal);
-  // Nur bei Breitenänderung (Drehen) neu zeichnen – iOS feuert resize auch beim Ein-/Ausblenden der Adressleiste
+  document.getElementById('winRoot').addEventListener('click', function () { dismissWinnerCard(); });
+
   var rt, lastW = window.innerWidth;
   window.addEventListener('resize', function () {
     clearTimeout(rt);
@@ -511,15 +920,62 @@ th.win .pname{background:#000;color:#fff}
     }, 150);
   });
 
-  // Test-/Debug-Hook (nur lesend)
-  window.__p10 = { get state() { return clone(state); }, get history() { return history.length; }, winnerInfo: winnerInfo, totals: totals };
+  function readTheme() {
+    try {
+      var t = localStorage.getItem(THEME_KEY);
+      if (t === 'dark') return 'dark';
+    } catch (e) { /* privater Modus */ }
+    return 'light';
+  }
+  function applyTheme(theme) {
+    var t = (theme === 'light' || theme === 'dark') ? theme : readTheme();
+    document.documentElement.setAttribute('data-theme', t);
+    var meta = document.getElementById('themeColor');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#101318' : '#eef1f5');
+    var barMeta = document.getElementById('statusBar');
+    if (barMeta) barMeta.setAttribute('content', t === 'dark' ? 'black-translucent' : 'default');
+    var btn = document.getElementById('btnTheme');
+    if (btn) {
+      btn.setAttribute('aria-pressed', String(t === 'dark'));
+      btn.setAttribute('aria-label', t === 'dark' ? 'Helles Design' : 'Dunkles Design');
+      var lbl = btn.querySelector('.theme-lbl');
+      if (lbl) lbl.textContent = t === 'dark' ? 'Hell' : 'Dunkel';
+    }
+  }
+  document.getElementById('btnTheme').addEventListener('click', function () {
+    var next = readTheme() === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem(THEME_KEY, next); } catch (e) { /* privater Modus */ }
+    applyTheme(next);
+  });
+  window.__p10 = { get state() { return clone(state); }, get history() { return history.length; }, winnerInfo: winnerInfo, totals: totals, celebrate: celebrate };
 
+  applyTheme();
   load();
   render();
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
-      navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(function (err) { console.warn('SW-Registrierung fehlgeschlagen', err); });
+      navigator.serviceWorker.register('./sw.js', { scope: './' }).then(function (reg) {
+        function takeOver(worker) {
+          if (worker) worker.postMessage('skipWaiting');
+        }
+        // Nach einem Reload ist die Seite schon neu – wartenden SW still übernehmen, ohne Banner.
+        if (reg.waiting) takeOver(reg.waiting);
+        reg.addEventListener('updatefound', function () {
+          var w = reg.installing;
+          if (!w) return;
+          w.addEventListener('statechange', function () {
+            if (w.state !== 'installed' || !navigator.serviceWorker.controller) return;
+            var root = document.getElementById('updateRoot');
+            if (!root || root.firstChild) return;
+            root.innerHTML = '<div class="update" role="status">Neue Version bereit<button type="button" id="btnReload">Aktualisieren</button></div>';
+            document.getElementById('btnReload').addEventListener('click', function () {
+              takeOver(reg.waiting || w);
+              location.reload();
+            });
+          });
+        });
+      }).catch(function (err) { console.warn('SW-Registrierung fehlgeschlagen', err); });
     });
   }
 })();
