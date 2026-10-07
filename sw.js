@@ -1,5 +1,5 @@
 /* Phase 10 Master – Service Worker v3 (sofort übernehmen, HTML network-first) */
-const CACHE = 'phase10-master-v22';
+const CACHE = 'phase10-master-v23';
 const ASSETS = [
   './',
   './index.html',
