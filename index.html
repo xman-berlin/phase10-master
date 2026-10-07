@@ -954,26 +954,19 @@ th.win .pname .cnt{color:var(--win-ink)}
   render();
 
   if ('serviceWorker' in navigator) {
+    var swReloading = false;
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (swReloading) return;
+      swReloading = true;
+      location.reload();
+    });
     window.addEventListener('load', function () {
       navigator.serviceWorker.register('./sw.js', { scope: './' }).then(function (reg) {
-        function takeOver(worker) {
-          if (worker) worker.postMessage('skipWaiting');
-        }
-        // Nach einem Reload ist die Seite schon neu – wartenden SW still übernehmen, ohne Banner.
-        if (reg.waiting) takeOver(reg.waiting);
-        reg.addEventListener('updatefound', function () {
-          var w = reg.installing;
-          if (!w) return;
-          w.addEventListener('statechange', function () {
-            if (w.state !== 'installed' || !navigator.serviceWorker.controller) return;
-            var root = document.getElementById('updateRoot');
-            if (!root || root.firstChild) return;
-            root.innerHTML = '<div class="update" role="status">Neue Version bereit<button type="button" id="btnReload">Aktualisieren</button></div>';
-            document.getElementById('btnReload').addEventListener('click', function () {
-              takeOver(reg.waiting || w);
-              location.reload();
-            });
-          });
+        if (reg.waiting) reg.waiting.postMessage('skipWaiting');
+        function check() { try { reg.update(); } catch (e) { /* Safari */ } }
+        check();
+        document.addEventListener('visibilitychange', function () {
+          if (document.visibilityState === 'visible') check();
         });
       }).catch(function (err) { console.warn('SW-Registrierung fehlgeschlagen', err); });
     });

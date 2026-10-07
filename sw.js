@@ -1,5 +1,5 @@
-/* Phase 10 Master – Service Worker v2 (HTML network-first) */
-const CACHE = 'phase10-master-v21';
+/* Phase 10 Master – Service Worker v3 (sofort übernehmen, HTML network-first) */
+const CACHE = 'phase10-master-v22';
 const ASSETS = [
   './',
   './index.html',
@@ -10,7 +10,9 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
+  event.waitUntil(
+    caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', (event) => {
@@ -18,6 +20,11 @@ self.addEventListener('activate', (event) => {
     caches.keys()
       .then((keys) => Promise.all(keys.filter((k) => k.startsWith('phase10-master-') && k !== CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
+      .then(() => self.clients.matchAll({ type: 'window' }))
+      .then((clients) => Promise.all(clients.map((client) => {
+        if (typeof client.navigate === 'function') return client.navigate(client.url);
+        return undefined;
+      })))
   );
 });
 
